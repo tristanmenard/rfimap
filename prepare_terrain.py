@@ -3,8 +3,6 @@ import matplotlib.pyplot as plt
 import rasp
 from argparse import ArgumentParser
 
-# to do: change rasp.myfuncs to new script in rfi_propagation_mapper
-
 if __name__ == "__main__":
     """
     Example usage:  python prepare_terrain.py "-72.26 -65.07 49.13 53.63" "-70.10 -67.23 50.48 52.28" -w
@@ -17,7 +15,6 @@ if __name__ == "__main__":
     data_src = parser.add_mutually_exclusive_group()
     data_src.add_argument('-w', '--web', action='store_true', help='Download SRTM elevation data from the web')
     data_src.add_argument('-c', '--cache', action='store_true', help='Use cached SRTM elevation data')
-    # data_src.add_argument('-f', '--file', type=str, help='Use previously-prepared elevation data object saved as .pickle')
     args = parser.parse_args()
 
     # Parse and check values of bounds
@@ -26,10 +23,6 @@ if __name__ == "__main__":
     E = float(bounds[1])
     S = float(bounds[2])
     N = float(bounds[3])
-    if E <= W:
-        raise ValueError('bounds: East bound should be greater than West bound')
-    if N <= S:
-        raise ValueError('bounds: North bound should be greater than South bound')
     bounds_rad = np.radians(((S, W), (N, E)))
 
     roi_bounds = args.roi_bounds[0].split(" ")
@@ -37,20 +30,13 @@ if __name__ == "__main__":
     E_roi = float(roi_bounds[1])
     S_roi = float(roi_bounds[2])
     N_roi = float(roi_bounds[3])
-    if E_roi <= W_roi:
-        raise ValueError('roi_bounds: East bound should be greater than West bound')
-    if N_roi <= S_roi:
-        raise ValueError('roi_bounds: North bound should be greater than South bound')
     roi_bounds_rad = np.radians(((S_roi, W_roi), (N_roi, E_roi)))
 
-    # Load SRTM3 terrain elevation data from web/cache/file
+    # Load SRTM3 terrain elevation data from web or cache
     if args.web:
         print('Getting terrain elevation data from web...')
         elevation = rasp.Elevation.from_web(bounds=bounds_rad)
         elevation.set_region_of_interest(bounds=roi_bounds_rad)
-    # elif args.file:
-    #     print(f'Getting terrain elevation data from {args.file}')
-    #     elevation = rasp.myfuncs.load_elevation(args.file)
     else:
         print('Getting terrain elevation data from cache...')
         elevation = rasp.Elevation.from_cache(bounds=bounds_rad)
@@ -58,7 +44,7 @@ if __name__ == "__main__":
 
     # Save terrain elevation data as .pickle
     print(f'Saving terrain elevation data to {args.savename} ...')
-    rasp.myfuncs.save_elevation(elevation, args.savename)
+    rasp.data.file.save_elevation(elevation, args.savename)
     print('Terrain elevation data saved')
 
     # Plot elevation map
