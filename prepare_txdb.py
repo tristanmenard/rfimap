@@ -37,7 +37,7 @@ if __name__ == '__main__':
     # Only keep transmitters within latitude, longitude bounds and within given frequency band
     print(f'Looking for transmitters between {args.frequency_low}-{args.frequency_high} MHz and inside latitude / longitude: {S}-{N} deg / {W}-{E} deg')
     txs = txdb.in_bounds(bounds_rad).in_band(args.frequency_low, args.frequency_high)
-    print(f'Found {len(txdb)} transmitters!')
+    print(f'Found {len(txs)} transmitters!')
     print(f'Saving transmitter database as {args.savename}')
-    rasp.data.file.save_txdb(txdb, args.savename)
+    rasp.data.file.save_txdb(txs, args.savename)
     print('Transmitter database saved')
