@@ -1,5 +1,4 @@
 import numpy as np
-import matplotlib.pyplot as plt
 import rasp
 from argparse import ArgumentParser
 
@@ -49,6 +48,7 @@ if __name__ == "__main__":
 
     # Plot elevation map
     if args.plot:
+        import matplotlib.pyplot as plt
         plt.figure(figsize=(10,8))
         plt.imshow(elevation.dem, origin='lower', extent=[W, E, S, N], aspect=elevation.dem.shape[1]/elevation.dem.shape[0], cmap='gist_ncar')
         plt.grid(color='k', linestyle='--', alpha=0.8)

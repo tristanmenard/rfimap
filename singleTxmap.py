@@ -9,34 +9,34 @@ import rasp
 import pathlib
 from argparse import ArgumentParser
 
-# TO DO: REMEMBER TO SET MAX_NUM_THREADS in rasp to 1 !!!
-
 """
-Example usage: python singleTxmap.py 0 0 elevation_dict.pickle txdb.csv /scratch/s/username/dir
+Example usage: python singleTxmap.py 0 0 elevation_dict.pickle txdb.csv
 """
 parser = ArgumentParser(description='Signal propagation mapping of a transmitter using rasp')
 parser.add_argument('job_number', type=int, help='gnu-parallel job number')
 parser.add_argument('node_number', type=int, help='node number for job')
 parser.add_argument('elevation_fname', type=str, help='path to elevation data file (.pickle)')
 parser.add_argument('txdb_fname', type=str, help='path to transmitter database file (.csv)')
-parser.add_argument('save_dir', type=str, help='directory where computed RFI power data is saved')
-
+# parser.add_argument('save_dir', type=str, help='directory where computed RFI power data is saved')
+parser.add_argument('--rxheight', type=float, default=3, help='receiving antenna height above ground')
+parser.add_argument('--txheight', type=float, default=10, help='transmitting antenna height above ground (if data is not found in database)')
+parser.add_argument('--Ns', type=float, default=301, help='surface refractivity (N-units)')
+parser.add_argument('--vertical', action='store_false', help='set vertical polarization (default is horizontal)')
 args = parser.parse_args()
 
 job_number = args.job_number # actually the row index in transmitter database
 node_num = args.node_number
 
-save_dir = pathlib.Path(args.save_dir)
-savemap_fname = save_dir.joinpath(f'node{node_num}/powermap_{job_number}.npy') # numpy binary array of power map
-savetx_fname = save_dir.joinpath(f'node{node_num}/info_{job_number}.txt')
+# save_dir = pathlib.Path(args.save_dir)
+# savemap_fname = save_dir.joinpath(f'node{node_num}/powermap_{job_number}.npy') # numpy binary array of power map
+# savetx_fname = save_dir.joinpath(f'node{node_num}/info_{job_number}.txt')
+savemap_fname = f'./node{node_num}/powermap_{job_number}.npy' # numpy binary array of power map
+savetx_fname = f'./node{node_num}/info_{job_number}.txt'
 
-
-# hardcoded parameters
-# values
-rxheight = 3 # receiving antenna height above ground
-txheight = 10 # default height for transmitting antenna above ground (if not data is not found in the database)
-Ns = 301 # surface refractivity (N-units)
-horizontal = True # horizontal polarization, set to False for vertical (can be done on a tx-by-tx basis as well)
+# simulation parameters
+rxheight = args.rxheight
+txheight = args.txheight
+Ns = args.Ns
 
 # Load elevation data
 elevation = rasp.data.file.load_elevation(args.elevation_fname) # region of interest is already set, if not uncomment the line below and choose desired bounds for the region of interest
@@ -82,7 +82,7 @@ else:
 	else:
 		raise ValueError(f'Missing transmitter height information... (job number: {job_number:03})')
 
-txattenuation_dB = elevation.attenuation_map(tx.latitude, tx.longitude, tx_height, rx_height=rxheight, frequency=tx.frequency, Ns=Ns, horizontal=horizontal)
+txattenuation_dB = elevation.attenuation_map(tx.latitude, tx.longitude, tx_height, rx_height=rxheight, frequency=tx.frequency, Ns=Ns, horizontal=args.vertical)
 
 # Calculate power from attenuation
 txpower = rasp.utils.misc.dBW_to_watts(-txattenuation_dB + tx.erp + 2.15) # in watts
