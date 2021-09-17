@@ -70,7 +70,7 @@ if ~np.isnan(tx.ground_elevation):
 			if tx_height <= 0:
 				tx_height = txheight
 	else:
-		raise ValueError(f'Missing transmitter height information... (job number: {job_number:03})')
+		raise ValueError(f'Missing transmitter height information... (job number: {job_number})')
 else:
 	if ~np.isnan(tx.height):
 		tx_height = tx.height
@@ -80,7 +80,7 @@ else:
 		elif tx.haat <= 0: # if haat is negative (or zero), revert to script's default transmitter height
 			tx_height = txheight
 	else:
-		raise ValueError(f'Missing transmitter height information... (job number: {job_number:03})')
+		raise ValueError(f'Missing transmitter height information... (job number: {job_number})')
 
 txattenuation_dB = elevation.attenuation_map(tx.latitude, tx.longitude, tx_height, rx_height=rxheight, frequency=tx.frequency, Ns=Ns, horizontal=args.vertical)
 

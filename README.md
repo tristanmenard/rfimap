@@ -80,7 +80,11 @@ Scripts intended for serially computing RFI propagation maps using the computati
   * The third argument gives the absolute path to the CSV transmitter database for the project.
   * The `--python_env_bin` option gives the path to the custom python 3 environment.
 
-6. Start all the jobs.
+6. Start all the jobs in the working directory. From `/project/g/group/rfimap`:
+```
+./start_jobs.sh /scratch/g/group/user/projectname
+```
+  where `/scratch/g/group/user/projectname` is the working directory for the project.
 
 7. Check in log files that all jobs completed successfully.
 
