@@ -4,11 +4,10 @@ from datetime import timedelta
 from argparse import ArgumentParser
 
 """
-Example usage: python job_template.py /scratch/group/user/projectname /project/group/user /project/group/user/projectname/elevation.pickle /project/group/user/projectname/txdb.csv
+Example usage: python job_template.py /scratch/group/user/projectname /project/group/user/projectname/elevation.pickle /project/group/user/projectname/txdb.csv
 """
 parser = ArgumentParser(description='Template bash script for a job on a given node.')
 parser.add_argument('work_dir', type=str, help='absolute path to working directory used for project')
-parser.add_argument('rasp_dir', type=str, help='absolute path to rasp parent directory')
 parser.add_argument('elevation_fname', type=str, help='absolute path to pickled elevation data file used for project')
 parser.add_argument('txdb_fname', type=str, help='absolute path to CSV transmitter database used for project')
 # parser.add_argument('--total_txs', type=int, help='total number of transmitters')
@@ -19,7 +18,6 @@ parser.add_argument('--python_env_bin', type=str, default='~/.virtualenvs/myenv/
 args = parser.parse_args()
 
 work_dir = pathlib.Path(args.work_dir)
-rasp_dir = pathlib.Path(args.rasp_dir)
 elevation_fname = pathlib.Path(args.elevation_fname)
 txdb_fname = pathlib.Path(args.txdb_fname)
 python_env_bin = pathlib.Path(args.python_env_bin)
@@ -64,9 +62,6 @@ module load gnu-parallel
 
 # Activate custom python 3 environment
 source {python_env_activate}
-
-# Add rasp to PYTHONPATH
-export PYTHONPATH="$PYTHONPATH:{rasp_dir}"
 
 parallel --joblog slurm-$SLURM_JOBID.log -j $SLURM_TASKS_PER_NODE "python singleTxmap.py' {{}} {node_num} {elevation_fname} {txdb_fname}" ::: {{{txfirst}..{txlast}}}
 """
