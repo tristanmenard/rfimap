@@ -5,10 +5,10 @@ from argparse import ArgumentParser
 
 if __name__ == '__main__':
     """
-    Example usage:  python prepare_txdb.py -b "-72.26 -65.07 49.13 53.63" -f1 20 -f2 200 -w
+    Example usage:  python prepare_txdb.py "-72.26 -65.07 49.13 53.63" -f1 20 -f2 200 -w
     """
     parser = ArgumentParser(description='Prepare transmitter database from ISED\'s Spectrum Management System. Downloads the database from http://www.ic.gc.ca/engineering/SMS_TAFL_Files/TAFL_LTAF.zip. Saves the database as csv.')
-    parser.add_argument('-b', '--bounds', type=str, nargs=1, default=["-180 180 -90 90"], help='Set latitude, longitude of outer bounds for inclusion of transmitters (space-delimited: "W E S N")')
+    parser.add_argument('bounds', type=str, nargs=1, help='Set latitude, longitude of outer bounds for inclusion of transmitters (space-delimited: "W E S N")')
     parser.add_argument('-f1', '--frequency_low', type=float, default=0, help='Set lower frequency bound (MHz) for transmitter inclusion in database.')
     parser.add_argument('-f2', '--frequency_high', type=float, default=20e3, help='Set upper frequency bound (MHz) for transmitter inclusion in database.')
     parser.add_argument('-s', '--savename', type=str, default='txdb.csv', help='Filename to save transmitter database. Must be .csv (default: txdb.csv)')
@@ -35,7 +35,7 @@ if __name__ == '__main__':
         txdb = raps.TxDB.from_cache()
 
     # Only keep transmitters within latitude, longitude bounds and within given frequency band
-    print(f'Looking for transmitters between {args.frequency_low}-{args.frequency_high} MHz and inside latitude / longitude: {S}-{N}° / {W}-{E}°')
+    print(f'Looking for transmitters between {args.frequency_low}-{args.frequency_high} MHz and inside latitude / longitude: {S}-{N} deg / {W}-{E} deg')
     txs = txdb.in_bounds(bounds_rad).in_band(args.frequency_low, args.frequency_high)
     print(f'Found {len(txdb)} transmitters!')
     print(f'Saving transmitter database as {args.savename}')
