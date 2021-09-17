@@ -76,14 +76,17 @@ Scripts intended for serially computing RFI propagation maps using the computati
   python job_template.py /scratch/g/group/user/projectname /project/g/group/user/projectname/elevfname.pickle /project/g/group/user/projectname/txdbfname.csv --python_env_bin ~/.virtualenvs/myenv/bin
   ```
   * The first argument is the working directory for the project.
-  * The second argument is the parent directory for rasp.
-  * The third argument gives the absolute path to the pickled elevation data file.
-  * The fourth argument gives the absolute path to the CSV transmitter database for the project.
+  * The second argument gives the absolute path to the pickled elevation data file.
+  * The third argument gives the absolute path to the CSV transmitter database for the project.
   * The `--python_env_bin` option gives the path to the custom python 3 environment.
 
 6. Start all the jobs.
 
 7. Check in log files that all jobs completed successfully.
+
+8. Sum RFI power from all transmitters together into a final RFI power map for the region of interest.
+
+9. Plot the map!
 
 
 ## Resources

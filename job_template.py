@@ -36,7 +36,7 @@ total_nodes = (total_txs-1) // args.txs_per_node + 1
 print(f'Writing job scripts for {total_nodes} nodes...')
 
 for node_num in range(total_nodes):
-	bash_fname = work_dir.joinpath(f'node{node_num}/{args.project_name}_node{node_num}_job.sh')
+	bash_fname = work_dir.joinpath(f'node{node_num}/{job_name}_node{node_num}_job.sh')
 	bash_fname.parent.mkdir(parents=True, exist_ok=True)
 
 	txfirst = node_num*args.txs_per_node
