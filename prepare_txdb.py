@@ -32,7 +32,7 @@ if __name__ == '__main__':
     else:
         # Retrieve transmitter database from cache
         print('Getting transmitter database from cache...')
-        txdb = raps.TxDB.from_cache()
+        txdb = rasp.TxDB.from_cache()
 
     # Only keep transmitters within latitude, longitude bounds and within given frequency band
     print(f'Looking for transmitters between {args.frequency_low}-{args.frequency_high} MHz and inside latitude / longitude: {S}-{N} deg / {W}-{E} deg')
