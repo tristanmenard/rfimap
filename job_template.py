@@ -63,7 +63,7 @@ module load gnu-parallel
 # Activate custom python 3 environment
 source {python_env_activate}
 
-parallel --joblog slurm-$SLURM_JOBID.log -j $SLURM_TASKS_PER_NODE "python singleTxmap.py' {{}} {node_num} {elevation_fname} {txdb_fname}" ::: {{{txfirst}..{txlast}}}
+parallel --joblog slurm-$SLURM_JOBID.log -j $SLURM_TASKS_PER_NODE "python singleTxmap.py {{}} {node_num} {elevation_fname} {txdb_fname}" ::: {{{txfirst}..{txlast}}}
 """
 
 	with open(bash_fname, 'w') as f:
